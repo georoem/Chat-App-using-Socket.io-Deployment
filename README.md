@@ -1,24 +1,23 @@
 # Acklen Avenue Challenge
 
-The objective for this challente is to deploy this project in NodeJs to a cloud provider.
+The objective for this challente is to deploy the project [Chat-App-using-Socket.io](https://github.com/abkunal/Chat-App-using-Socket.io) in NodeJs to a cloud provider.
 
 ## Requisites
-```requisites
-Terraform v 0.12.28
-Ansible v 2.9.6
-AWS CLI v 2.0.37
-AWS Credentials
-Python
-```
+Linux OS
+  * [Terraform v 0.12.28](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+  * [Ansible v 2.9.6](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+  * [AWS CLI v 2.0.37](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-install.html)
+  * [AWS Credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html)
+  * [Python](https://www.python.org/downloads/)
 
-## Deployment Folder
+## Deployment Contents
 
 ```folders
-getKey.py
-getEndpoint.py
-infra/
+getKey.py           <- Script to extract rsa key from terraform.tfstate
+getEndpoint.py      <- Script to extract endpoint to app from terraform.tfstate
+infra/              <- Terraform files
     main.tf
-    variables.tf
+    vars.tf
     modules/
         ec2/
             ec2.tf
@@ -35,7 +34,7 @@ infra/
         key/
             key.tf
             vars.tf
-app/
+app/                <- Ansible files
     app.yml
     vars.yml
     terraform-inventory
@@ -46,10 +45,11 @@ app/
 
 ```bash
 # Clone repo
+git clone https://github.com/georoem/Chat-App-using-Socket.io-Deployment.git  
 # Configure AWS CLI with your credentials
 aws configure
-# Go to deployment folder
-cd deployment
+# Go to project folder
+cd Chat-App-using-Socket.io-Deployment
 # Prepare configuration
 terraform init infra
 # Validate the configuration before apply it
