@@ -5,7 +5,7 @@ print ("Excecuting script: " + sys.argv[0])
 if(len(sys.argv) <= 1 ):
    raise Exception("Oops!  That was no file to read...")
 
-terraform_path = "infra/terraform.tfstate"
+terraform_path = sys.argv[1]
 key_rsa_path = "key_rsa"
 output = ''
 
