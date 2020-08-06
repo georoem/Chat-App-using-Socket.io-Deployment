@@ -1,0 +1,48 @@
+- hosts: all
+  remote_user: "{{remote_user}}"
+  become: yes
+
+  tasks:
+  - name: Install Packages
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - build-essential
+      - npm
+      - nodejs
+      - git
+      - mcrypt
+      - nginx
+      - curl
+
+  - name: Install PM2
+    npm: name=pm2 global=yes production=yes
+
+  - name: Clean App Folder
+    file: 
+      state: absent
+      path: "{{ home_folder }}/{{ app_folder }}"
+
+  - name: Git Clone Repo
+    git:
+      repo: "{{repo_app}}"
+      dest: "{{ home_folder }}/{{ app_folder }}"
+    register: git_task
+
+  - name: Running NPM Install
+    npm:
+      path: "{{ home_folder }}/{{ app_folder }}"
+    register: npm_task
+    when: git_task.changed
+
+  - name: Start App
+    command: pm2 start app.js --name chat chdir={{home_folder}}/{{app_folder}}
+    when: npm_task.changed
+
+  - name: Copy Content Nginx Default Conf
+    copy:
+      content: "{{ nginx_default_conf_content }}"
+      dest: "{{ nginx_default_conf }}"
+
+
+  - name: Restart Nginx
+    service: name=nginx state=restarted enabled=yes
